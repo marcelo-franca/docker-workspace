@@ -1,0 +1,26 @@
+---
+kind: pipeline
+name: workspace
+
+workspace:
+  path: /drone/src
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: build
+    image: plugins/docker
+    auto_tag: true
+    settings:
+      repo:
+        from_secret: workspace_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      dockerfile: .
+    when:
+      branch:
+        - master
