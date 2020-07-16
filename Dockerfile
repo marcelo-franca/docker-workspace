@@ -13,7 +13,7 @@ COPY ./config/awscliv2.zip /tmp/awscliv2.zip
 
 RUN apt-get install bash-completion vim git sudo unzip python3 python3-pip  -y
 
-RUN useradd -M ${USER} -s /bin/bash \
+RUN useradd -m ${USER} -s /bin/bash \
   && if [ -z "${PASSWORD}" ]; then \
   export PASSWORD=`cat /dev/urandom | tr -dc A-Z-a-z-0-9 | head -c${1:-16}` && \
   echo -n "\n\n===================== USER ==========================\n \
