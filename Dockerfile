@@ -22,7 +22,7 @@ RUN useradd -M ${USER} -s /bin/bash \
   fi \
   && (echo ${PASSWORD} ; echo ${PASSWORD} ) | passwd ${USER} \
   && gpasswd -a ${USER} sudo \
-  && echo "${USER} ALL=(ALL) NOPASSWD: ${USER}" >> /etc/sudoers  
+  && echo "${USER} ALL=(ALL) NOPASSWD: DEVOPSUSER" >> /etc/sudoers  
 ## Install AWS cli
 RUN unzip -q /tmp/awscliv2.zip -d /tmp \
   && ./tmp/aws/install
