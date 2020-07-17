@@ -35,4 +35,6 @@ RUN apt-get clean autoclean \
 
 USER ${USER}
 
+WORKDIR /home/${USER}
+
 ENTRYPOINT []
