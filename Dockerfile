@@ -11,7 +11,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install wget curl bash-completion \
- vim git sudo unzip python3 python3-pip --no-install-recommends -y
+ vim git sudo unzip python3 python3-pip openssh-client --no-install-recommends -y
 
 
 # Download AWS CLI
@@ -24,7 +24,7 @@ RUN wget "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_
 RUN wget "https://releases.hashicorp.com/packer/${PK_VERSION}/packer_${PK_VERSION}_linux_amd64.zip"
 
 
-COPY ./config/VMware-ovftool-4.4.1-16812187-lin.x86_64.bundle /tmp/
+#COPY ./config/VMware-ovftool-4.4.1-16812187-lin.x86_64.bundle /tmp/
 
 RUN useradd -m ${USER} -s /bin/bash \
   && if [ -z "${PASSWORD}" ]; then \
@@ -44,8 +44,8 @@ RUN unzip -q terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin/ \
   && unzip -q packer_${PK_VERSION}_linux_amd64.zip -d /usr/local/bin
 
 ## Install VMware tools
-RUN chmod 755 /tmp/*.bundle \
-    && ./tmp/VMware-ovftool-4.4.1-16812187-lin.x86_64.bundle --eulas-agreed
+#RUN chmod 755 /tmp/*.bundle \
+#    && ./tmp/VMware-ovftool-4.4.1-16812187-lin.x86_64.bundle --eulas-agreed
 
 RUN apt-get clean autoclean \
   && apt-get autoremove \
