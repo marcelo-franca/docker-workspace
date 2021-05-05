@@ -2,6 +2,7 @@ FROM debian:buster-slim
 
 LABEL maintainer="<marcelo.frneves@gmail.com>"
 LABEL name="Marcelo França"
+LABEL version="v1.1.0"
 ENV USER "devopsuser"
 ENV LOCAL_SCRIPTS="/usr/local/src"
 ENV TF_VERSION "0.15.1"
