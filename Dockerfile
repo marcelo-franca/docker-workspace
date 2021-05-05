@@ -1,18 +1,20 @@
-FROM ubuntu:20.04
+FROM debian:buster-slim
 
 LABEL maintainer="<marcelo.frneves@gmail.com>"
 LABEL name="Marcelo França"
 ENV USER "devopsuser"
 ENV LOCAL_SCRIPTS="/usr/local/src"
-ENV TF_VERSION "0.14.9"
+ENV TF_VERSION "0.15.1"
 ENV PK_VERSION "1.7.2"
 ENV PATH="$LOCAL_SCRIPTS/:$PATH"
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install wget curl bash-completion \
- vim git sudo unzip python3 python3-pip openssh-client --no-install-recommends -y
-
+ vim git sudo unzip python3 python3-pip openssh-client gnupg2 gnupg1 --no-install-recommends -y \
+    && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
+    && apt-get update && apt-get install ansible python-apt python-pip -y
 
 # Download AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -35,7 +37,13 @@ RUN useradd -m ${USER} -s /bin/bash \
   fi \
   && (echo ${PASSWORD} ; echo ${PASSWORD} ) | passwd ${USER} \
   && gpasswd -a ${USER} sudo \
-  && echo "${USER} ALL=(ALL) NOPASSWD: DEVOPSUSER" >> /etc/sudoers  
+  && echo "${USER} ALL=(ALL) NOPASSWD: DEVOPSUSER" >> /etc/sudoers \
+  && chown ${USER}:${USER} /etc/ansible -R
+
+## Configuring ansible.cfg
+RUN sed -i 's/^#host_key_checking\ =\ False/host_key_checking\ =\ False/g' \
+  /etc/ansible/ansible.cfg
+
 ## Install AWS cli
 RUN unzip -q awscliv2.zip -d /tmp \
   && ./tmp/aws/install
