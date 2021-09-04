@@ -5,8 +5,8 @@ LABEL name="Marcelo França"
 LABEL version="v1.1.0"
 ENV USER "devopsuser"
 ENV LOCAL_SCRIPTS="/usr/local/src"
-ENV TF_VERSION "0.15.1"
-ENV PK_VERSION "1.7.2"
+ENV TF_VERSION "1.0.6"
+ENV PK_VERSION "1.7.4"
 ENV PATH="$LOCAL_SCRIPTS/:$PATH"
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -26,8 +26,6 @@ RUN wget "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_
 # Download packer
 RUN wget "https://releases.hashicorp.com/packer/${PK_VERSION}/packer_${PK_VERSION}_linux_amd64.zip"
 
-
-#COPY ./config/VMware-ovftool-4.4.1-16812187-lin.x86_64.bundle /tmp/
 
 RUN useradd -m ${USER} -s /bin/bash \
   && if [ -z "${PASSWORD}" ]; then \
@@ -51,10 +49,6 @@ RUN unzip -q awscliv2.zip -d /tmp \
 ## Install Terraform and Packer
 RUN unzip -q terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin/ \
   && unzip -q packer_${PK_VERSION}_linux_amd64.zip -d /usr/local/bin
-
-## Install VMware tools
-#RUN chmod 755 /tmp/*.bundle \
-#    && ./tmp/VMware-ovftool-4.4.1-16812187-lin.x86_64.bundle --eulas-agreed
 
 RUN apt-get clean autoclean \
   && apt-get autoremove \
