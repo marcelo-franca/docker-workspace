@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 LABEL maintainer="<marcelo.frneves@gmail.com>"
 LABEL name="Marcelo França"
-LABEL version="v1.1.0"
+LABEL version="v1.1.2"
 ENV USER "devopsuser"
 ENV LOCAL_SCRIPTS="/usr/local/src"
 ENV TF_VERSION "1.0.6"
@@ -12,10 +12,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install wget curl bash-completion \
- vim git sudo unzip python3 python3-pip openssh-client gnupg2 gnupg1 --no-install-recommends -y \
-    && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
-    && apt-get update && apt-get install ansible python-apt python-pip -y
+  vim git sudo unzip python3 python3-pip openssh-client gnupg2 gnupg1 --no-install-recommends -y \
+  && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list \
+  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
+  && apt-get update && apt-get install ansible python-apt python-pip -y
 
 # Download AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -49,6 +49,11 @@ RUN unzip -q awscliv2.zip -d /tmp \
 ## Install Terraform and Packer
 RUN unzip -q terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin/ \
   && unzip -q packer_${PK_VERSION}_linux_amd64.zip -d /usr/local/bin
+
+## Install RKE cli
+RUN curl -s https://api.github.com/repos/rancher/rke/releases/latest | grep download_url | grep linux-amd64 | cut -d '"' -f 4 | wget -qi - \
+  && mv rke_linux-amd64 /usr/local/bin/rke \
+  && chmod +x /usr/local/bin/rke
 
 RUN apt-get clean autoclean \
   && apt-get autoremove \
