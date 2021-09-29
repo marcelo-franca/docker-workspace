@@ -12,10 +12,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install wget curl bash-completion \
-  vim git sudo unzip python3 python3-pip openssh-client gnupg2 gnupg1 --no-install-recommends -y \
+  vim git sudo unzip python3 python3-pip openssh-client \
+  gnupg2 gnupg1 apt-transport-https \
+  ca-certificates --no-install-recommends -y \
   && echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 \
   && apt-get update && apt-get install ansible python-apt python-pip -y
+
+# Install kubectl
+RUN curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list \
+    && apt-get update \
+    && apt-get install -y kubectl \
+    && kubectl completion bash >/etc/bash_completion.d/kubectl
+
+
+# Install Helm
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 # Download AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -63,6 +76,7 @@ RUN apt-get clean autoclean \
   && rm -f *.zip
 
 USER ${USER}
+
 
 WORKDIR /home/${USER}
 
