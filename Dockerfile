@@ -2,10 +2,10 @@ FROM debian:buster-slim
 
 LABEL maintainer="<marcelo.frneves@gmail.com>"
 LABEL name="Marcelo França"
-LABEL version="v1.1.2"
+LABEL version="v1.1.4"
 ENV USER "devopsuser"
 ENV LOCAL_SCRIPTS="/usr/local/src"
-ENV TF_VERSION "1.0.6"
+ENV TF_VERSION "1.1.0"
 ENV PK_VERSION "1.7.4"
 ENV PATH="$LOCAL_SCRIPTS/:$PATH"
 ENV DEBIAN_FRONTEND=noninteractive
